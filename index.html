@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub page as PWA template</title>
+  <link rel="canonical" href="http://Friedrich90.github.io/Test_App_PWA/" />
+  <link rel="manifest" href="/Test_App_PWA/manifest.webmanifest">
+</head>
+<body>
+  <h1>GitHub page as PWA template</h1>
+    …
+  <script>
+      if (navigator.serviceWorker) {
+        navigator.serviceWorker.register (
+          '/Test_App_PWA/src/service_worker.js',
+          {scope: '/Test_App_PWA/'}
+        )
+      }
+  </script>
+</body>
+</html>
