@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import logo from './logo.svg';
-import Accelerometer from './components/react-accelerometer';
+import Accelerometer from './components/React-accelerometer';
 
 export default class App extends Component {
   render() {
