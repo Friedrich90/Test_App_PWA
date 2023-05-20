@@ -2,70 +2,63 @@
 import './App.css';
 import logo from './logo.svg';
 // import Accelerometer from './components/react-accelerometer';
-import { Accelerometer, Gyroscope } from 'react-native-sensors';
 import React, { useEffect, useState } from 'react';
 
-
 const App = () => {
+  const [sensorData, setSensorData] = useState({
+    acceleration: { x: null, y: null, z: null },
+    rotationRate: { alpha: null, beta: null, gamma: null },
+    magneticField: { x: null, y: null, z: null },
+  });
 
-  const SensorComponent = () => {
-    const [accelerometerData, setAccelerometerData] = useState({ x: 0, y: 0, z: 0 });
-    const [gyroscopeData, setGyroscopeData] = useState({ x: 0, y: 0, z: 0 });
-  
-    useEffect(() => {
-      const accelerometerSubscription = new Accelerometer({
-        updateInterval: 100,
-      })
-        .then(observable => {
-          const subscription = observable.subscribe(({ x, y, z }) => {
-            setAccelerometerData({ x, y, z });
-          });
-          return () => subscription.unsubscribe();
-        })
-        .catch(error => {
-          console.log('The accelerometer is not available on this device:', error);
-        });
-  
-      const gyroscopeSubscription = new Gyroscope({
-        updateInterval: 100,
-      })
-        .then(observable => {
-          const subscription = observable.subscribe(({ x, y, z }) => {
-            setGyroscopeData({ x, y, z });
-          });
-          return () => subscription.unsubscribe();
-        })
-        .catch(error => {
-          console.log('The gyroscope is not available on this device:', error);
-        });
-  
-      return () => {
-        accelerometerSubscription && accelerometerSubscription.unsubscribe();
-        gyroscopeSubscription && gyroscopeSubscription.unsubscribe();
-      };
-    }, []);
-  
-    return (
-      <View>
-        <Text>Accelerometer:</Text>
-        <Text>X: {accelerometerData.x}</Text>
-        <Text>Y: {accelerometerData.y}</Text>
-        <Text>Z: {accelerometerData.z}</Text>
-  
-        <Text>Gyroscope:</Text>
-        <Text>X: {gyroscopeData.x}</Text>
-        <Text>Y: {gyroscopeData.y}</Text>
-        <Text>Z: {gyroscopeData.z}</Text>
-      </View>
-    );
-  };
-  
+  useEffect(() => {
+    const handleSensorData = (event) => {
+      const { accelerationIncludingGravity, rotationRate, magneticField } = event;
+
+      setSensorData({
+        acceleration: {
+          x: accelerationIncludingGravity.x,
+          y: accelerationIncludingGravity.y,
+          z: accelerationIncludingGravity.z,
+        },
+        rotationRate: {
+          alpha: rotationRate.alpha,
+          beta: rotationRate.beta,
+          gamma: rotationRate.gamma,
+        },
+        magneticField: {
+          x: magneticField.x,
+          y: magneticField.y,
+          z: magneticField.z,
+        },
+      });
+    };
+
+    // Start listening for the 'devicemotion' event
+    window.addEventListener('devicemotion', handleSensorData);
+
+    return () => {
+      // Clean up - stop listening for the 'devicemotion' event
+      window.removeEventListener('devicemotion', handleSensorData);
+    };
+  }, []);
+
   return (
-    <View>
-      {/* ... */}
-      <SensorComponent />
-      {/* ... */}
-    </View>
+    <div>
+      <h1>Sensor Data</h1>
+      <h2>Linear Acceleration</h2>
+      <p>X: {sensorData.acceleration.x}</p>
+      <p>Y: {sensorData.acceleration.y}</p>
+      <p>Z: {sensorData.acceleration.z}</p>
+      <h2>Gyroscope</h2>
+      <p>Alpha: {sensorData.rotationRate.alpha}</p>
+      <p>Beta: {sensorData.rotationRate.beta}</p>
+      <p>Gamma: {sensorData.rotationRate.gamma}</p>
+      <h2>Magnetometer</h2>
+      <p>X: {sensorData.magneticField.x}</p>
+      <p>Y: {sensorData.magneticField.y}</p>
+      <p>Z: {sensorData.magneticField.z}</p>
+    </div>
   );
 };
 
