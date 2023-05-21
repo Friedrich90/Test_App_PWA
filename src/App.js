@@ -71,7 +71,7 @@ function App() {
     <div className="App">
       <h1>Accelerometer Data</h1>
       <div>
-      <button onClick={getAccel}></button>
+      <button onClick={getAccel}>Click Me to get acceleration</button>
       <h2>Gyroscope</h2>
       <p>Alpha: {sensorData.acceleration.alpha}</p>
       <p>Beta: {sensorData.acceleration.beta}</p>
