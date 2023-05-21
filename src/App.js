@@ -6,9 +6,87 @@ import React, { useEffect, useState, Component } from 'react';
 //import {Accelerometer, Gyroscope, AbsoluteOrientationSensor} from './motion-sensors.js';
 import Accelerometer from './components/react-accelerometer';
 import Gyroscope from './components/gyroscope';
+//import React from 'react';
+//import Toggle  from './Toggle';
+//import { useDeviceOrientation } from './useDeviceOrientation';
 
+//https://itnext.io/gyro-web-accessing-the-device-orientation-in-javascript-387da43eeb84
+
+export default class App extends React.Component {
+  render() {
+    function onClick() {
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        // Handle iOS 13+ devices.
+        DeviceMotionEvent.requestPermission()
+        //DeviceOrientationEvent.requestPermission()
+          .then((state) => {
+            if (state === 'granted') {
+              window.addEventListener('devicemotion', this.handleOrientation, true);
+              window.addEventListener('deviceorientation', this.handleOrientation, true);
+            } else {
+              console.error('Request to access the orientation was rejected');
+            }
+          })
+          .catch(console.error);
+      } else {
+        // Handle regular non iOS 13+ devices.
+        window.addEventListener('devicemotion', this.handleOrientation, true);
+        window.addEventListener('deviceorientation', this.handleOrientation, true);
+      }
+    }
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img
+            src={logo}
+            className="App-logo"
+            alt="logo"
+            onClick={() => onClick()}
+            //style={{
+              //transform: `rotate(${north}deg)`
+            //}}
+          />
+          </header>
+        </div>
+    );
+  }
+}
+          
+
+//export default App;
+
+/*
 export default class App extends Component {
   render() {
+
+    function onClick() {
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        // Handle iOS 13+ devices.
+        DeviceMotionEvent.requestPermission()
+          .then((state) => {
+            if (state === 'granted') {
+              window.addEventListener('devicemotion', handleOrientation, tue);
+            } else {
+              console.error('Request to access the orientation was rejected');
+            }
+          })
+          .catch(console.error);
+      } else {
+        // Handle regular non iOS 13+ devices.
+        window.addEventListener('devicemotion', handleOrientation, true);
+      }
+    }
+
+    window.addEventListener('deviceorientation', this.handleOrientation, true)
+
+    function handleOrientation(event) {
+      const absolute = event.absolute;
+      const alpha = event.alpha;
+      const beta = event.beta;
+      const gamma = event.gamma;
+    
+      // Do stuff with the new orientation data
+    }
 
     return (
       <div className="App">
@@ -45,7 +123,7 @@ export default class App extends Component {
   }
 }
 
-
+*/
 
 
 //https://developer.chrome.com/en/articles/generic-sensor/
