@@ -12,45 +12,71 @@ import Gyroscope from './components/gyroscope';
 
 //https://itnext.io/gyro-web-accessing-the-device-orientation-in-javascript-387da43eeb84
 
-export default class App extends React.Component {
-  render() {
-    function onClick() {
-      if (typeof DeviceMotionEvent.requestPermission === 'function') {
-        // Handle iOS 13+ devices.
-        DeviceMotionEvent.requestPermission()
-        //DeviceOrientationEvent.requestPermission()
-          .then((state) => {
-            if (state === 'granted') {
-              window.addEventListener('devicemotion', this.handleOrientation, true);
-              window.addEventListener('deviceorientation', this.handleOrientation, true);
-            } else {
-              console.error('Request to access the orientation was rejected');
-            }
-          })
-          .catch(console.error);
-      } else {
-        // Handle regular non iOS 13+ devices.
-        window.addEventListener('devicemotion', this.handleOrientation, true);
-        window.addEventListener('deviceorientation', this.handleOrientation, true);
-      }
+
+function App() {
+  const [acceleration, setAcceleration] = useState({ x: 0, y: 0, z: 0 });
+  const [rotationRate, setRotationRate] = useState({ alpha: 0, beta: 0, gamma: 0 });
+
+  useEffect(() => {
+    requestPermission();
+
+    return () => {
+      window.removeEventListener('devicemotion', handleMotion);
+    };
+  }, []);
+
+  const requestPermission = () => {
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+      DeviceMotionEvent.requestPermission()
+        .then((response) => {
+          if (response === 'granted') {
+            window.addEventListener('devicemotion', handleMotion, true);
+          } else {
+            console.log('Permission denied for accelerometer access');
+          }
+        })
+        .catch((error) => {
+          console.error('Error requesting accelerometer permission:', error);
+        });
+    } else {
+      console.log('DeviceMotionEvent.requestPermission not supported');
     }
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img
-            src={logo}
-            className="App-logo"
-            alt="logo"
-            onClick={() => onClick()}
-            //style={{
-              //transform: `rotate(${north}deg)`
-            //}}
-          />
-          </header>
-        </div>
-    );
-  }
+  };
+
+  const handleMotion = (event) => {
+    const { acceleration, rotationRate } = event;
+    setAcceleration({
+      x: acceleration.x.toFixed(2),
+      y: acceleration.y.toFixed(2),
+      z: acceleration.z.toFixed(2),
+    });
+    setRotationRate({
+      alpha: rotationRate.alpha.toFixed(2),
+      beta: rotationRate.beta.toFixed(2),
+      gamma: rotationRate.gamma.toFixed(2),
+    });
+  };
+
+  return (
+    <div className="App">
+      <h1>Accelerometer Data</h1>
+      <div>
+        <h2>Acceleration</h2>
+        <p>X: {acceleration.x}</p>
+        <p>Y: {acceleration.y}</p>
+        <p>Z: {acceleration.z}</p>
+      </div>
+      <div>
+        <h2>Rotation Rate</h2>
+        <p>Alpha: {rotationRate.alpha}</p>
+        <p>Beta: {rotationRate.beta}</p>
+        <p>Gamma: {rotationRate.gamma}</p>
+      </div>
+    </div>
+  );
 }
+
+export default App;
           
 
 //export default App;
