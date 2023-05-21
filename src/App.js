@@ -30,27 +30,30 @@ function App() {
       <div>{JSON.stringify(data)}</div>
       <div>
         <h1>Acceleration</h1>
-        <li>Acceleration X: {data.acceleration.x}</li>
-        <li>Acceleration Y: {data.acceleration.y}</li>
-        <li>Acceleration Z: {data.acceleration.z}</li>
+        <li>Acceleration X: {data.acceleration.x?.toFixed(5)}</li>
+        <li>Acceleration Y: {data.acceleration.y?.toFixed(5)}</li>
+        <li>Acceleration Z: {data.acceleration.z?.toFixed(5)}</li>
       </div>
       <div>
         <h1>AccelerationIncludingGravity</h1>
         <li>
-          AccelerationIncludingGravity X: {data.accelerationIncludingGravity.x}
+          AccelerationIncludingGravity X:{" "}
+          {data.accelerationIncludingGravity.x?.toFixed(5)}
         </li>
         <li>
-          AccelerationIncludingGravity Y: {data.accelerationIncludingGravity.y}
+          AccelerationIncludingGravity Y:{" "}
+          {data.accelerationIncludingGravity.y?.toFixed(5)}
         </li>
         <li>
-          AccelerationIncludingGravity Z: {data.accelerationIncludingGravity.z}
+          AccelerationIncludingGravity Z:{" "}
+          {data.accelerationIncludingGravity.z?.toFixed(5)}
         </li>
       </div>
       <div>
         <h1>RotationRate</h1>
-        <li>RotationRate Alpha: {data.rotationRate.alpha}</li>
-        <li>RotationRate Beta: {data.rotationRate.beta}</li>
-        <li>RotationRate Gamma: {data.rotationRate.gamma}</li>
+        <li>RotationRate Alpha: {data.rotationRate.alpha?.toFixed(5)}</li>
+        <li>RotationRate Beta: {data.rotationRate.beta?.toFixed(5)}</li>
+        <li>RotationRate Gamma: {data.rotationRate.gamma?.toFixed(5)}</li>
       </div>
       <div>
         <h1>Deviceorientation</h1>
