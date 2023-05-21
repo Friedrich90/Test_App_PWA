@@ -4,7 +4,7 @@ import { throttleTime } from 'rxjs/operators';
 
 //https://github.com/ruimaranhao/pwa-accelerometer
 
-export default class Accelerometer extends React.Component {
+export default class Gyroscope extends React.Component {
 
   static defaultProps = {
     multiplier: 1,
@@ -31,15 +31,15 @@ export default class Accelerometer extends React.Component {
   componentDidMount () {
     const {timeout} = this.props
 
-    window.addEventListener('orientationchange', this.handleOrientation)
+    window.addEventListener('deviceorientation', this.handleOrientation)
 
-    fromEvent(window, 'orientationchange')
+    fromEvent(window, 'deviceorientation')
         .pipe(throttleTime(timeout))
         .subscribe((event) => {
             const { orientation } = window
             this.setState(() => ({ landscape: orientation === 90 || orientation === -90 }))});
 
-      fromEvent(window, 'devicemotion')
+      fromEvent(window, 'deviceorientation')
         .pipe(throttleTime(timeout))
         .subscribe((event) => {
             const { landscape } = this.state

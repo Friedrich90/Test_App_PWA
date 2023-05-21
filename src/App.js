@@ -2,11 +2,54 @@
 import './App.css';
 import logo from './logo.svg';
 // import Accelerometer from './components/react-accelerometer';
-import React, { useEffect, useState } from 'react';
-import {Accelerometer, Gyroscope, AbsoluteOrientationSensor} from './motion-sensors.js';
+import React, { useEffect, useState, Component } from 'react';
+//import {Accelerometer, Gyroscope, AbsoluteOrientationSensor} from './motion-sensors.js';
+import Accelerometer from './components/react-accelerometer';
+import Gyroscope from './components/gyroscope';
+
+export default class App extends Component {
+  render() {
+
+    return (
+      <div className="App">
+        <Accelerometer timeout={100} render={({ x, y, z, alpha_old, beta_old, gamma_old, north }) => (
+          <Gyroscope timeout={100} render={({ x_new, y_new, z_new, alpha, beta, gamma, north_new }) => (
+          <header className="App-header">
+          <img
+            src={logo}
+            className="App-logo"
+            alt="logo"
+            style={{
+              transform: `rotate(${north}deg)`
+            }}
+          />
+          <ul>
+            <li>x: {x}</li>
+            <li>y: {y}</li>
+            <li>z: {z}</li>
+            <li>rotation alpha: {alpha}</li>
+            <li>rotation beta: {beta}</li>
+            <li>rotation gamma: {gamma}</li>
+            <li>rotation new alpha: {alpha}</li>
+            <li>rotation new beta: {beta}</li>
+            <li>rotation new gamma: {gamma}</li>
+          </ul>
+          <p> North: {north}</p>
+        </header>
+        )}
+        />
+        )}
+        />
+      </div>
+    );
+  }
+}
+
+
+
 
 //https://developer.chrome.com/en/articles/generic-sensor/
-
+/*
 const App = () => {
 
   const [sensorData, setSensorData] = useState({
@@ -129,7 +172,7 @@ if (error.name === 'SecurityError') {
 }
 }
 
-
+*/
 /*
   const [sensorData, setSensorData] = useState({
     acceleration: { x: null, y: null, z: null },
@@ -170,7 +213,7 @@ if (error.name === 'SecurityError') {
   }, []);
 
   */
-
+  /*
   return (
     <div>
       <h1>Sensor Data</h1>
@@ -192,7 +235,7 @@ if (error.name === 'SecurityError') {
 
 export default App;
 
-
+*/
 /*
 export default class App extends Component {
   render() {
