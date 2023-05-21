@@ -31,7 +31,19 @@ export default class Gyroscope extends React.Component {
   componentDidMount () {
     const {timeout} = this.props
 
-    window.addEventListener('deviceorientation', this.handleOrientation)
+    window.addEventListener('deviceorientation', this.handleOrientation, true)
+
+    function handleOrientation(event) {
+      const absolute = event.absolute;
+      const alpha = event.alpha;
+      const beta = event.beta;
+      const gamma = event.gamma;
+    
+      // Do stuff with the new orientation data
+    }
+  }
+
+    /*
 
     fromEvent(window, 'deviceorientation')
         .pipe(throttleTime(timeout))
@@ -65,6 +77,7 @@ export default class Gyroscope extends React.Component {
                   north: (360.0 - event.alpha).toFixed(2),
             }))});
   }
+  */
 
   render () {
     const {render} = this.props
