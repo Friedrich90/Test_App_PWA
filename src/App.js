@@ -14,63 +14,68 @@ import Gyroscope from './components/gyroscope';
 
 
 function App() {
-  const [acceleration, setAcceleration] = useState({ x: 0, y: 0, z: 0 });
-  const [rotationRate, setRotationRate] = useState({ alpha: 0, beta: 0, gamma: 0 });
 
-  useEffect(() => {
-    requestPermission();
+  const [sensorData, setSensorData] = useState({
+    rotationRate: { alpha: null, beta: null, gamma: null },
+  });
 
-    return () => {
-      window.removeEventListener('devicemotion', handleMotion);
-    };
-  }, []);
+  function getAccel() {
+    DeviceMotionEvent.requestPermission().then(response => {
+        if (response == 'granted') {
+       // Add a listener to get smartphone orientation 
+           // in the alpha-beta-gamma axes (units in degrees)
+            window.addEventListener('deviceorientation',(event) => {
+                // Expose each orientation angle in a more readable way
+                const rotation_degrees = event.alpha;
+                const frontToBack_degrees = event.beta;
+                const leftToRight_degrees = event.gamma;
 
-  const requestPermission = () => {
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-      DeviceMotionEvent.requestPermission()
-        .then((response) => {
-          if (response === 'granted') {
-            window.addEventListener('devicemotion', handleMotion, true);
-          } else {
-            console.log('Permission denied for accelerometer access');
-          }
-        })
-        .catch((error) => {
-          console.error('Error requesting accelerometer permission:', error);
-        });
-    } else {
-      console.log('DeviceMotionEvent.requestPermission not supported');
-    }
-  };
+                setSensorData({
+                  rotationRate: {
+                    alpha: event.alpha,
+                    beta: event.beta,
+                    gamma: event.gamma,
+                  }
+                });
+                
+                /*
+                // Update velocity according to how tilted the phone is
+                // Since phones are narrower than they are long, double the increase to the x velocity
+                vx = vx + leftToRight_degrees * updateRate*2; 
+                vy = vy + frontToBack_degrees * updateRate;
+                
+                // Update position and clip it to bounds
+                px = px + vx*.5;
+                if (px > 98 || px < 0){ 
+                    px = Math.max(0, Math.min(98, px)) // Clip px between 0-98
+                    vx = 0;
+                }
 
-  const handleMotion = (event) => {
-    const { acceleration, rotationRate } = event;
-    setAcceleration({
-      x: acceleration.x.toFixed(2),
-      y: acceleration.y.toFixed(2),
-      z: acceleration.z.toFixed(2),
+                py = py + vy*.5;
+                if (py > 98 || py < 0){
+                    py = Math.max(0, Math.min(98, py)) // Clip py between 0-98
+                    vy = 0;
+                }
+                
+                dot = document.getElementsByClassName("indicatorDot")[0]
+                dot.setAttribute('style', "left:" + (px) + "%;" +
+                                              "top:" + (py) + "%;");
+                                              */
+                
+            });
+        }
     });
-    setRotationRate({
-      alpha: rotationRate.alpha.toFixed(2),
-      beta: rotationRate.beta.toFixed(2),
-      gamma: rotationRate.gamma.toFixed(2),
-    });
-  };
+}
 
   return (
     <div className="App">
       <h1>Accelerometer Data</h1>
       <div>
-        <h2>Acceleration</h2>
-        <p>X: {acceleration.x}</p>
-        <p>Y: {acceleration.y}</p>
-        <p>Z: {acceleration.z}</p>
-      </div>
-      <div>
-        <h2>Rotation Rate</h2>
-        <p>Alpha: {rotationRate.alpha}</p>
-        <p>Beta: {rotationRate.beta}</p>
-        <p>Gamma: {rotationRate.gamma}</p>
+      <button onClick={getAccel}></button>
+      <h2>Gyroscope</h2>
+      <p>Alpha: {sensorData.acceleration.alpha}</p>
+      <p>Beta: {sensorData.acceleration.beta}</p>
+      <p>Gamma: {sensorData.acceleration.gamma}</p>
       </div>
     </div>
   );
